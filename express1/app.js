@@ -7,12 +7,27 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const dotenv = require("dotenv");
 
+// 템플릿
+const nunjucks = require("nunjucks");
+
+// 라우터 파일 가져오기
+const indexRouter = require("./routes/index");
+const userRouter = require("./routes/user");
+const aboutRouter = require("./routes/about");
+
 // .env 파일 환경 가져오기
 dotenv.config(); // env 에 저장한 값을 불러오려면 => process.env
 
 const app = express();
 const port = 3000;
 app.set("port", process.env.PORT || port); // 기본 포트번호가 없다면 env에 지정한 포트번호 쓰기
+
+// view engine 설정
+app.set("view engine", "njk"); // or html
+nunjucks.configure("views", {
+  express: app,
+  watch: true, // 소스가 변경되면 자동으로 템플릿 재 랜더링
+});
 
 // 미들웨어
 
@@ -50,27 +65,40 @@ app.use((req, res, next) => {
   next(); // 다음 미들웨어 실행을 위해서 반드시 필요
 });
 
-app.get(
-  "/",
-  (req, res, next) => {
-    // 화면에 텍스트 출력
-    // res.send("Hello World");
+app.use("/", indexRouter);
+app.use("/user", userRouter);
+app.use("/about", aboutRouter);
 
-    // res.sendFile(path.join(__dirname, "/index.html"));
-
-    console.log("/ 의 GET 요청에 응답");
-    next();
-  },
-  // 에러 발생시 이동할 에러 처리 경로로 이동
-  (req, res) => {
-    throw new Error("에러 발생 시 에러 처리 미들웨어로 이동");
-  }
-);
+// 없는 경로 요청 시 응답
+app.use((req, res, next) => {
+  const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
+  error.status = 404;
+  next(error);
+});
 
 // 에러처리 미들웨어
 app.use((err, req, res, next) => {
-  console.log(err);
-  res.status(500).send(err.message);
+  res.locals.message = err.message;
+  res.locals.error = process.env.NODE_ENV !== "production" ? err : {};
+  res.status(500 || err.status);
+  res.render("error");
 });
+
+// app.get(
+//   "/",
+//   (req, res, next) => {
+//     // 화면에 텍스트 출력
+//     // res.send("Hello World");
+
+//     // res.sendFile(path.join(__dirname, "/index.html"));
+
+//     console.log("/ 의 GET 요청에 응답");
+//     next();
+//   },
+//   // 에러 발생시 이동할 에러 처리 경로로 이동
+//   (req, res) => {
+//     throw new Error("에러 발생 시 에러 처리 미들웨어로 이동");
+//   }
+// );
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
