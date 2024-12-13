@@ -12,7 +12,7 @@ const commentSchema = new Schema({
     ref: "User", // User 스키마 사용자의 ObjectId가 삽입
   },
   comment: {
-    type: Number,
+    type: String,
     required: true,
   },
   createdAt: {
@@ -21,4 +21,4 @@ const commentSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model("User", commentSchema);
+module.exports = mongoose.model("Comment", commentSchema);

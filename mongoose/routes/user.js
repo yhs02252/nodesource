@@ -1,10 +1,12 @@
 var express = require("express");
 var User = require("../schemas/user");
+const Comment = require("../schemas/comment");
 
 const router = express.Router();
 
 router
-  .get("/", async (req, res, next) => {
+  .route("/")
+  .get(async (req, res, next) => {
     try {
       // db.users.find()
       const users = await User.find({});
@@ -31,5 +33,21 @@ router
       next(error);
     }
   });
+
+// 특정 user가 작성한 전체 comment 가져오기
+// /users/6759057f3450e417adfd5152/comment
+router.get("/:id/comments", async (req, res, next) => {
+  try {
+    const comments = await Comment.find({ commenter: req.params.id }).populate(
+      "commenter"
+    );
+
+    console.log("comments", comments);
+
+    res.json(comments);
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = router;
