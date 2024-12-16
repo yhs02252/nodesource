@@ -1,0 +1,9 @@
+{% extends "templates/layout.njk" %}
+{% block content %}
+    <h1>{{message}}</h1>
+    {# GET / 라우터가 없습니다. #}
+    <h2>{{error.status}}</h2>
+    {# 404 #}
+    <h5>{{error.stack}}</h5>
+    {# Error: GET / 라우터가 없습니다. at C:\source\nodesource\mongoose\app.js:33:17 at Layer.handle [as handle_request] (C:\source\nodesource\mongoose\node_modules\express\lib\router\layer.js:95:5) at trim_prefix (C:\source\nodesource\mongoose\node_modules\express\lib\router\index.js:328:13) at C:\source\nodesource\mongoose\node_modules\express\lib\router\index.js:286:9 at Function.process_params (C:\source\nodesource\mongoose\node_modules\express\lib\router\index.js:346:12) at next (C:\source\nodesource\mongoose\node_modules\express\lib\router\index.js:280:10) at urlencodedParser (C:\source\nodesource\mongoose\node_modules\body-parser\lib\types\urlencoded.js:94:7) at Layer.handle [as handle_request] (C:\source\nodesource\mongoose\node_modules\express\lib\router\layer.js:95:5) at trim_prefix (C:\source\nodesource\mongoose\node_modules\express\lib\router\index.js:328:13) at C:\source\nodesource\mongoose\node_modules\express\lib\router\index.js:286:9 #}
+{% endblock %}
