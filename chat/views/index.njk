@@ -10,12 +10,16 @@
 <body>
     <div>f12를 눌러 console 탭과 network 탭을 확인하세요</div>
     <script>
+
+        {# Socket.io 연결 #}
         const socket = io.connect("ws://localhost:8005",{path:'/socket.io'});
         socket.on('news',(data)=>{
-            console.log(data)
+            console.log("data 확인 : " , data)
             socket.emit('reply', 'Hello Node.JS')
-        });       
+        });
 
+        {# 클라이언트 쪽에서 웹소켓 연결 #}
+        {# ws://localhost:8005 ==> ws: 가 붙어서 전용채널 생성 #}
         {# const webSocket = new WebSocket("ws://localhost:8005");
         webSocket.onopen = ()=>{
             console.log("서버와 웹 소켓 연결 성공!!")
