@@ -53,7 +53,6 @@ const sessionMiddleWare = session({
   name: "session-cookie",
 });
 
-app.use("/", pageRouter);
 app.use(sessionMiddleWare);
 
 app.use((req, res, next) => {
@@ -66,7 +65,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use("/", pageRouter);
+app.use("/", pageRouter);
 
 // 없는 경로 요청 시 404 응답
 app.use((req, res, next) => {
