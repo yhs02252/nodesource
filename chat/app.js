@@ -39,6 +39,7 @@ connect();
 // 미들웨어 연결
 app.use(morgan("dev"));
 app.use("/", express.static(path.join(__dirname, "public"))); // static 파일 경로
+app.use("/img", express.static(path.join(__dirname, "uploads"))); // 업로드 파일 경로
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

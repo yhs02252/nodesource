@@ -95,13 +95,35 @@ exports.removeRoom = async (req, res, next) => {
 
 exports.sendChat = async (req, res, next) => {
   try {
+    // chat 가져와서 db입력
+    const chat = await Chat.create({
+      room: req.params.id,
+      user: req.session.color,
+      chat: req.body.chat,
+    });
+
+    // socket.emit() : 메세지 전송
+    // 네임스페이스.emit() : 같은 네임스페이스에서 메세지 공유
+    // 네임스페이스.to().emit() : 같은 네임스페이스이고, 같은 방에서 메세지 공유
+    req.app.get("io").of("/chat").to(req.params.id).emit("chat", chat);
+    res.send("ok");
   } catch (error) {
     console.log(error);
     next(error);
   }
 };
+
 exports.sendImg = async (req, res, next) => {
   try {
+    // chat 가져와서 db입력
+    const chat = await Chat.create({
+      room: req.params.id,
+      user: req.session.color,
+      img: req.file.filename,
+    });
+
+    req.app.get("io").of("/chat").to(req.params.id).emit("chat", chat);
+    res.send("ok");
   } catch (error) {
     console.log(error);
     next(error);
